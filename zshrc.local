@@ -1,0 +1,32 @@
+# Path to robbyrussell/oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
+
+# Theme to load.
+ZSH_THEME="ys"
+
+# Aliases.
+alias zshconfig="${EDITOR} ~/.zshrc"
+alias grep="grep --color=always"
+alias irb="pry"
+
+# Display red dots whilst waiting for completion
+COMPLETION_WAITING_DOTS="true"
+
+# Disable marking untracked files under VCS as dirty. This makes repository
+# status check for large repositories much, much faster.
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Default datetime format
+HIST_STAMPS="yyyy-mm-dd"
+
+# Plugins which are being loaded
+plugins=(
+    archlinux
+    docker
+    fasd
+    git
+    history-substring-search
+    zsh-syntax-highlighting
+    zshconfig
+)
+source $ZSH/oh-my-zsh.sh
