@@ -1,0 +1,14 @@
+# Have tmux act like tmux
+unbind C-a
+set -g prefix C-b
+
+# Enable mouse mode
+set -g mode-mouse on
+
+# Buffer to clipboard
+bind-key -t vi-copy 'v' begin-selection
+bind-key -t vi-copy 'y' copy-selection
+bind y run-shell "tmux show-buffer | xclip -sel clip -i" \; display-message "Copied tmux buffer to system clipboard"
+
+# Killswitch, for those unresponsive suckers
+bind q killp
