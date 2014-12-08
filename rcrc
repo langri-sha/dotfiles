@@ -1,0 +1,2 @@
+EXCLUDES="ssh/authorized_keys README.md LICENSE"
+DOTFILES_DIRS="$HOME/dotfiles-local $HOME/dotfiles"
