@@ -11,3 +11,6 @@ insert_final_newline = true
 
 [{gitconfig,gitconfig.local,Vagrantfile}]
 indent_size = 2
+
+[hooks/*]
+indent_style = tab

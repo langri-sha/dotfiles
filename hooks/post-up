@@ -1,0 +1,32 @@
+#!/bin/sh
+set -e
+
+BASEDIR=$(dirname $(dirname $0))
+
+# Clone robbyrussel/oh-my-zsh
+if [ ! -e $HOME/.oh-my-zsh ]; then
+	git clone http://github.com/robbyrussell/oh-my-zsh $HOME/.oh-my-zsh
+fi
+
+# If trusted, copy over and preserve any existing list of authorized keys
+if [ "$TRUSTED" = "true" ]; then
+	if [ ! -e $HOME/.ssh ]; then
+		mkdir $HOME/.ssh
+		chmod u=rwx,g=,o= ./ssh
+	fi
+
+	if [ ! -e $HOME/.ssh/authorized_keys ]; then
+		touch $HOME/.ssh/authorized_keys
+		chmod u=rw,g=,o= $HOME/.ssh/authorized_keys
+	fi
+
+	if [ ! -e $HOME/.ssh/authorized_keys.bak ]; then
+		cp $HOME/.ssh/authorized_keys $HOME/.ssh/authorized_keys.bak
+	fi
+
+	cat <<-END | sed -e 's/^[ \t]*//' > $HOME/.ssh/authorized_keys
+		# Managed by rcm; see rcup(1)
+		$(cat $BASEDIR/ssh/authorized_keys)
+		$(cat $HOME/.ssh/authorized_keys.bak)
+	END
+fi
