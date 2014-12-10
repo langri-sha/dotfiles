@@ -1,0 +1,18 @@
+language: python
+os:
+    - linux
+python:
+    - "2.7"
+
+# Installs rcm and ansible
+install:
+    - wget https://thoughtbot.github.io/rcm/debs/rcm_1.2.3-1_all.deb
+    - sudo dpkg -i rcm_1.2.3-1_all.deb
+    - sudo pip install ansible
+    - ln -s $TRAVIS_BUILD_DIR $HOME/dotfiles-local
+
+# Installs dotfiles using rcup
+script: >
+    ansible-playbook
+    --connection=local --verbose
+    $TRAVIS_BUILD_DIR/playbook.yml

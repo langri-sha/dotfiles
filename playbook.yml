@@ -24,9 +24,9 @@
         - vim
         - zsh
 
-    - name: configure vagrant's shell
+    - name: configure user's shell
       sudo: yes
-      user: name=vagrant state=present shell=/bin/zsh
+      user: name={{ ansible_env.USER }} state=present shell=/bin/zsh
 
     - name: clone thoughtbot/dotfiles
       git: >
