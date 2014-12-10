@@ -13,7 +13,7 @@ before_install:
 # Install inventory file and the dotfiles-local repository
 install:
     - sudo mkdir /etc/ansible
-    - "sudo echo '[dev]\nlocalhost ansible_connection=local' > /etc/ansible/hosts"
+    - sudo echo '[dev]\\nlocalhost ansible_connection=local' > /etc/ansible/hosts
     - ln -s $TRAVIS_BUILD_DIR $HOME/dotfiles-local
 
 # Installs dotfiles using rcup
