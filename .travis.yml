@@ -8,12 +8,13 @@ python:
 before_install:
     - wget https://thoughtbot.github.io/rcm/debs/rcm_1.2.3-1_all.deb
     - sudo dpkg -i rcm_1.2.3-1_all.deb
-    - sudo pip install ansible
+    - >
+    sudo pip install ansible
 
 # Install inventory file and the dotfiles-local repository
 install:
     - sudo mkdir /etc/ansible
-    - sudo echo '[dev]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
+    - "sudo echo '[dev]\nlocalhost ansible_connection=local' > /etc/ansible/hosts"
     - ln -s $TRAVIS_BUILD_DIR $HOME/dotfiles-local
 
 # Installs dotfiles using rcup
