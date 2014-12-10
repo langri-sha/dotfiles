@@ -1,6 +1,8 @@
 dotfiles-local
 ==============
 
+[![Build Status](https://travis-ci.org/langri-sha/dotfiles-local.svg)](https://travis-ci.org/langri-sha/dotfiles-local)
+
 My local configurations which supplement
 [`thoughtbot/dotfiles`](https://github.com/thoughtbot/dotfiles) with lasers. To
 be used in conjunction with [`rcm`](https://github.com/thoughtbot/rcm#rcm).
