@@ -1,2 +1,2 @@
-EXCLUDES="ssh/authorized_keys README.md LICENSE"
+EXCLUDES="LICENSE README.md playbook.yml authorized_keys Vagrantfile"
 DOTFILES_DIRS="$HOME/dotfiles-local $HOME/dotfiles"

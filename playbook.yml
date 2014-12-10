@@ -1,0 +1,42 @@
+--- # Ansible machine setup
+- hosts: dev
+  tasks:
+    - name: daily APT update
+      sudo: yes
+      apt: update_cache=yes cache_valid_time=86400
+
+    - name: add APT repositories
+      sudo: yes
+      apt_repository: repo={{ item }} state=present update_cache=yes
+      with_items:
+        - 'ppa:martin-frost/thoughtbot-rcm'
+
+    - name: install base packages
+      sudo: yes
+      apt: package={{ item }} state=present force=yes
+      with_items:
+        - git
+        - htop
+        - rcm
+        - tmux
+        - vim
+        - zsh
+
+    - name: configure vagrant's shell
+      sudo: yes
+      user: name=vagrant state=present shell=/bin/zsh
+
+    - name: clone thoughtbot/dotfiles
+      git: >
+        repo=https://github.com/thoughtbot/dotfiles.git
+        dest=~/dotfiles
+        accept_hostkey=yes
+
+    - name: link rcm configuration
+      file: >
+        src=~/dotfiles-local/rcrc
+        dest=~/.rcrc
+        state=link
+
+    - name: install dotfiles
+      command: rcup
