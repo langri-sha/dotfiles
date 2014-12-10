@@ -1,4 +1,6 @@
---- # Ansible machine setup
+---
+# Provisions configured applications
+
 - hosts: dev
   tasks:
     - name: daily APT update
