@@ -26,8 +26,8 @@ guide](https://github.com/thoughtbot/rcm#installation).
 cd $HOME
 
 # Clone repositories
-git clone git@github.com:thoughtbot/dotfiles.git
-git clone git@github.com:langri-sha/dotfiles-local.git
+git clone git://github.com/thoughtbot/dotfiles.git
+git clone git://github.com/langri-sha/dotfiles-local.git
 
 # Install provided rcm configuration
 cp ./dotfiles-local/rcrc ./.rcrc
