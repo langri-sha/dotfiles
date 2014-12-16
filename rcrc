@@ -1,2 +1,2 @@
-EXCLUDES="LICENSE README.md playbook.yml authorized_keys Vagrantfile"
+EXCLUDES="authorized_keys dconf.ini LICENSE playbook.yml README.md Vagrantfile"
 DOTFILES_DIRS="$HOME/dotfiles-local $HOME/dotfiles"
