@@ -38,13 +38,6 @@ lsrc
 # Install
 rcup
 ```
-
-For your security, the list of user-authorized public keys will be added if and only if `TRUSTED=true` is set:
-
-```
-TRUSTED=true rcup
-```
-
 Developing
 ----------
 

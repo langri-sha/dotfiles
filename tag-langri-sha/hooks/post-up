@@ -1,0 +1,28 @@
+#!/bin/sh
+set -e
+
+BASEDIR=$(dirname $(dirname $0))
+
+# Ensure user's SSH config directory exists
+if [ ! -e $HOME/.ssh ]; then
+	mkdir $HOME/.ssh
+	chmod u=rwx,g=,o= ./ssh
+fi
+
+# Create dummy authorization keys, if they don't exist
+if [ ! -e $HOME/.ssh/authorized_keys ]; then
+	touch $HOME/.ssh/authorized_keys
+	chmod u=rw,g=,o= $HOME/.ssh/authorized_keys
+fi
+
+# Ensure initial backup
+if [ ! -e $HOME/.ssh/authorized_keys.bak ]; then
+	cp $HOME/.ssh/authorized_keys $HOME/.ssh/authorized_keys.bak
+fi
+
+# Construct list, preserving keys present in the initial backup
+cat <<-END | sed -e 's/^[ \t]*//' > $HOME/.ssh/authorized_keys
+	# Managed by rcm; see rcup(1)
+	$(cat $BASEDIR/ssh/authorized_keys)
+	$(cat $HOME/.ssh/authorized_keys.bak)
+END
