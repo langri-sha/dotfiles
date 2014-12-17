@@ -17,14 +17,19 @@
       sudo: yes
       apt: package={{ item }} state=present force=yes
       with_items:
+        - build-essential
         - dconf-cli
         - dconf-service
         - git
         - htop
+        - python-pip
         - rcm
         - tmux
         - vim
         - zsh
+
+    - name: install cram
+      pip: name=cram
 
     - name: configure user's shell
       sudo: yes
