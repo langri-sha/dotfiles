@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-BASEDIR=$(dirname $(dirname $0))
+TAGDIR=$(dirname $(dirname $0))
 
 # Load dconf database dump
-cat $BASEDIR/dconf.ini | dconf load /
+cat $TAGDIR/dconf.ini | dconf load /
