@@ -17,6 +17,8 @@
       sudo: yes
       apt: package={{ item }} state=present force=yes
       with_items:
+        - dconf-cli
+        - dconf-service
         - git
         - htop
         - rcm
