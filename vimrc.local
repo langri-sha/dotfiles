@@ -1,0 +1,16 @@
+" Store lots of :cmdline history
+set history=1000
+
+" Show current mode in the status
+set showmode
+
+" Reload files changed outside of vim
+set autoread
+
+" See all file/command completions
+set wildmenu
+
+" Visual feedback
+set visualbell
+
+source ~/.vimrc.keys
