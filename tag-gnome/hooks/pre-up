@@ -1,0 +1,23 @@
+#!/bin/sh
+set -e
+
+TAGDIR=$(dirname $(dirname $0))
+BASEDIR=$(dirname $TAGDIR)
+FONTDIR=$TAGDIR/local/share/fonts/
+
+. $BASEDIR/hooks/share.sh
+
+test -e $FONTDIR || mkdir -p $FONTDIR
+
+# Download and install ProFont
+url=http://tobiasjung.name/downloadfile.php
+file=profont-x11.7z
+
+if [ ! -e $DOTFILES_TMP/$file ]; then
+    curl \
+        --location --get --data file=$file \
+        --output $DOTFILES_TMP/$file \
+        $url
+fi
+
+7z e -y -ir!*.pcf $DOTFILES_TMP/$file -o$FONTDIR
