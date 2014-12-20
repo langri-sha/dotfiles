@@ -21,3 +21,9 @@ if [ ! -e $DOTFILES_TMP/$file ]; then
 fi
 
 7z e -y -ir!*.pcf $DOTFILES_TMP/$file -o$FONTDIR
+
+# Download and install Inconsolata
+url=http://www.levien.com/type/myfonts/Inconsolata.otf
+file=Inconsolata.otf
+
+test -e $FONTDIR/$file || curl --output $FONTDIR/$file $url
