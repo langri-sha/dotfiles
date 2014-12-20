@@ -1,2 +1,2 @@
-EXCLUDES="authorized_keys dconf.ini LICENSE playbook.yml README.md Vagrantfile"
+EXCLUDES="ansible/* authorized_keys dconf.ini LICENSE README.md Vagrantfile"
 DOTFILES_DIRS="$HOME/dotfiles-local $HOME/dotfiles"
