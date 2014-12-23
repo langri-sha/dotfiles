@@ -3,11 +3,13 @@ set -e
 
 TAGDIR=$(dirname $(dirname $0))
 BASEDIR=$(dirname $TAGDIR)
-FONTDIR=$TAGDIR/local/share/fonts/
+FONTDIR=$TAGDIR/local/share/fonts
+EXTDIR=$TAGDIR/local/share/gnome-shell/extensions
 
 . $BASEDIR/hooks/share.sh
 
 test -e $FONTDIR || mkdir -p $FONTDIR
+test -e $EXTDIR || mkdir -p $EXTDIR
 
 # Download and install ProFont
 url=http://tobiasjung.name/downloadfile.php
@@ -27,3 +29,21 @@ url=http://www.levien.com/type/myfonts/Inconsolata.otf
 file=Inconsolata.otf
 
 test -e $FONTDIR/$file || curl --output $FONTDIR/$file $url
+
+# Download and install gnome-shell-impatience extension
+url=http://gfxmonk.net/dist/0install/impl/gnome-shell-impatience/gnome-shell-impatience-0.4.2.tar.gz
+file=$(basename $url)
+extdir=$EXTDIR/impatience@gfxmonk.net
+
+if [ ! -e $DOTFILES_TMP/$file ]; then
+    curl --output $DOTFILES_TMP/$file $url
+fi
+
+if [ ! -e $extdir ]; then
+    mkdir $extdir
+fi
+
+tar -xf $DOTFILES_TMP/$file \
+    --directory=$extdir \
+    --strip=1 \
+    impatience/
