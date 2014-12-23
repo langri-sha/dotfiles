@@ -1,0 +1,19 @@
+'global':
+  'welcome':
+    'showOnStartup': false
+  'core':
+    'themes': [
+      'predawn-ui'
+      'predawn-syntax'
+    ]
+    'destroyEmptyPanes': false
+  'editor':
+    'fontFamily': 'Inconsolata'
+  'linter': {}
+  'exception-reporting':
+    'userId': '9414cc1b-fc84-82ec-55d4-75d5d0a3639d'
+  'remember-session':
+    'x': 0
+    'y': 66
+    'width': 1920
+    'height': 1014

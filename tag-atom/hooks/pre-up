@@ -1,0 +1,50 @@
+#!/bin/sh
+set -e
+
+packages=(
+    atom-alignment
+    atom-beautify
+    atom-jinja2
+    autocomplete-plus
+    build
+    color-picker
+    dracula-theme
+    editorconfig
+    git-diff
+    glist
+    go-oracle
+    kobalt
+    kobalt-ui
+    language-ini
+    language-viml
+    line-ending-converter
+    linter
+    lunarized-syntax
+    merge-conflicts
+    metro-syntax
+    metro-ui
+    minimap
+    remember-session
+    remote-sync
+    sort-lines
+    tasks
+    term2
+    vim-mode
+    Zen
+    unicorn-ui
+    unicorn-syntax
+)
+
+# Install Atom packages, unless already present or `apm` is not available
+if command -v apm >/dev/null 2>&1; then
+    for package in ${packages[@]}
+    do
+        echo package is $package
+        if [ ! -e $HOME/.atom/packages/$package ]; then
+            apm install $package
+        fi
+    done
+else
+    echo "WARN: using tag 'atom', but 'apm' is not installed; skipped installing Atom packages ";
+    exit 1;
+fi
