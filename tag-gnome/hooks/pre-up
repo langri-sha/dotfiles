@@ -50,9 +50,21 @@ tar -xf $DOTFILES_TMP/$file \
     impatience/
 
 # Download and install dash-to-dock extension
-url=https://github.com/micheleg/dash-to-dock/archive/extensions.gnome.org-v30.tar.gz
-file=$(basename $url)
-extdir=$EXTDIR/dashtodock@micxgx.gmail.com
+url=https://github.com/micheleg/dash-to-dock/archive/extensions.gnome.org-v35.tar.gz
+output=$DOTFILES_TMP/dash-to-dock-v35.tar.gz
+tmp=$DOTFILES_TMP/dash-to-dock
+
+if [ ! -e $output ]; then
+    curl --location --output $output $url
+fi
+
+if [ ! -e $tmp ]; then
+    mkdir $tmp
+fi
+
+tar -xf $output --directory=$tmp --strip=1
+cd $tmp
+make install
 
 if [ ! -e $DOTFILES_TMP/$file ]; then
     curl --location --output $DOTFILES_TMP/$file $url
