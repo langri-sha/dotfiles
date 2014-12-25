@@ -66,6 +66,11 @@ tar -xf $output --directory=$tmp --strip=1
 cd $tmp
 make install
 
+# Download and install dash-hotkeys
+url=https://github.com/franziskuskiefer/app-keys-gnome-shell-extension/archive/fc3a2248c7.tar.gz
+file=app-keys-gnome-shell-extension-master-fc3a2248c7.tar.gz
+extdir=$EXTDIR/unitylike-hotkey@webgyerek.net
+
 if [ ! -e $DOTFILES_TMP/$file ]; then
     curl --location --output $DOTFILES_TMP/$file $url
 fi
