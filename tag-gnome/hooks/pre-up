@@ -14,21 +14,22 @@ test -e $EXTDIR || mkdir -p $EXTDIR
 # Download and install ProFont
 url=http://tobiasjung.name/downloadfile.php
 file=profont-x11.7z
+output=$DOTFILES_TMP/$file
 
-if [ ! -e $DOTFILES_TMP/$file ]; then
+if [ ! -e $output ]; then
     curl \
         --location --get --data file=$file \
-        --output $DOTFILES_TMP/$file \
+        --output $output \
         $url
 fi
 
-7z e -y -ir!*.pcf $DOTFILES_TMP/$file -o$FONTDIR
+7z e -y -ir!*.pcf $output -o$FONTDIR
 
 # Download and install Inconsolata
 url=http://www.levien.com/type/myfonts/Inconsolata.otf
-file=Inconsolata.otf
+output=$FONTDIR/$(basename $url)
 
-test -e $FONTDIR/$file || curl --output $FONTDIR/$file $url
+test -e $output || curl --output $output $url
 
 # Download and install gnome-shell-impatience extension
 url=http://gfxmonk.net/dist/0install/impl/gnome-shell-impatience/gnome-shell-impatience-0.4.2.tar.gz
