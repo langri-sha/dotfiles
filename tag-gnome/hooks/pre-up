@@ -64,7 +64,7 @@ fi
 
 tar -xf $output --directory=$tmp --strip=1
 cd $tmp
-make install
+make INSTALLBASE=$EXTDIR install
 
 # Download and install dash-hotkeys
 url=https://github.com/franziskuskiefer/app-keys-gnome-shell-extension/archive/fc3a2248c7.tar.gz
