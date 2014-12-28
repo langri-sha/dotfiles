@@ -32,12 +32,12 @@ output=$FONTDIR/$(basename $url)
 test -e $output || curl --output $output $url
 
 # Download and install gnome-shell-impatience extension
-url=http://gfxmonk.net/dist/0install/impl/gnome-shell-impatience/gnome-shell-impatience-0.4.2.tar.gz
-file=$(basename $url)
+url=https://github.com/gfxmonk/gnome-shell-impatience/archive/e7e9e00.tar.gz
+file=gnome-shell-impatience-e7e9e00.tar.gz
 extdir=$EXTDIR/impatience@gfxmonk.net
 
 if [ ! -e $DOTFILES_TMP/$file ]; then
-    curl --output $DOTFILES_TMP/$file $url
+    curl --location --output $DOTFILES_TMP/$file $url
 fi
 
 if [ ! -e $extdir ]; then
@@ -46,8 +46,8 @@ fi
 
 tar -xf $DOTFILES_TMP/$file \
     --directory=$extdir \
-    --strip=1 \
-    impatience/
+    --strip=2 \
+    gnome-shell-impatience-e7e9e00662571457a06f0527fd5b78f6a1e2da6f/impatience/
 
 # Download and install dash-to-dock extension
 url=https://github.com/micheleg/dash-to-dock/archive/extensions.gnome.org-v35.tar.gz
@@ -68,7 +68,7 @@ make INSTALLBASE=$EXTDIR install
 
 # Download and install dash-hotkeys
 url=https://github.com/franziskuskiefer/app-keys-gnome-shell-extension/archive/fc3a2248c7.tar.gz
-file=app-keys-gnome-shell-extension-master-fc3a2248c7.tar.gz
+file=app-keys-gnome-shell-extension-fc3a2248c7.tar.gz
 extdir=$EXTDIR/unitylike-hotkey@webgyerek.net
 
 if [ ! -e $DOTFILES_TMP/$file ]; then
