@@ -1,3 +1,5 @@
 .vagrant
+*.foo.t.err
+
 tag-gnome/local/share
 tag-zsh/oh-my-zsh
