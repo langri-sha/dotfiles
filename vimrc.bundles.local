@@ -1,4 +1,5 @@
 Plugin 'airblade/vim-gitgutter'
+Plugin 'easymotion/vim-easymotion'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'terryma/vim-multiple-cursors'
