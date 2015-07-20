@@ -1,3 +1,6 @@
+" Reset leader to default
+let mapleader = "\\"
+
 " Re-iterating multi-cursor mappings for brevity
 let g:multi_cursor_use_default_mapping=0
 
