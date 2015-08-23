@@ -16,6 +16,9 @@ set visualbell
 " Toggle tabs on startup
 let g:nerdtree_tabs_open_on_console_startup=1
 
+" Ignore NERDTree files
+let NERDTreeIgnore = ['\.pyc$']
+
 " Change default colorscheme
 colorscheme Tomorrow-Night-Eighties
 
