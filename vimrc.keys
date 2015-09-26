@@ -17,7 +17,7 @@ nmap s <Plug>(easymotion-s2)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 
-" Buffer cycling, feedback included
-noremap <Tab> :bnext<CR>:ls<CR>
-noremap <S-Tab> :bprevious<CR>:ls<CR>
+" Buffer cycling
+noremap <Tab> :bnext<CR>
+noremap <S-Tab> :bprevious<CR>
 

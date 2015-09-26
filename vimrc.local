@@ -23,3 +23,6 @@ let NERDTreeIgnore = ['\.pyc$']
 colorscheme Tomorrow-Night-Eighties
 
 source ~/.vimrc.keys
+
+" Split MBE buffer above
+let g:miniBufExplBRSplit=0
