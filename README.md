@@ -38,15 +38,6 @@ lsrc
 # Install
 rcup
 ```
-Developing
-----------
-
-A [Vagrant](https://www.vagrantup.com) machine is provided with a complete
-environment to hammer on and explore the configurations.
-
-```
-vagrant up && vagrant ssh
-```
 
 Rebasing
 --------
