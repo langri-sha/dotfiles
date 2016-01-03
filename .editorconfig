@@ -15,5 +15,5 @@ indent_size = 2
 [{*.t,*.t.err}]
 indent_size = 2
 
-[{hooks/*,Makefile}]
+[{pre-up,post-up}]
 indent_style = tab

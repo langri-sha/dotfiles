@@ -9,10 +9,6 @@ let g:multi_cursor_prev_key='<C-p>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
 
-" Easymotion
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
-let g:EasyMotion_smartcase = 1
-
 nmap s <Plug>(easymotion-s2)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
@@ -20,4 +16,3 @@ map <Leader>k <Plug>(easymotion-k)
 " Buffer cycling
 noremap <Tab> :bnext<CR>
 noremap <S-Tab> :bprevious<CR>
-

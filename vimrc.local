@@ -22,7 +22,11 @@ let NERDTreeIgnore = ['\.pyc$']
 " Change default colorscheme
 colorscheme Tomorrow-Night-Eighties
 
-source ~/.vimrc.keys
+" Easymotion
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+let g:EasyMotion_smartcase = 1
 
 " Split MBE buffer above
 let g:miniBufExplBRSplit=0
+
+source ~/.vimrc.keys
