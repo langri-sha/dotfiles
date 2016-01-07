@@ -1,9 +1,0 @@
-#!/bin/sh
-set -e
-
-BASEDIR=$(dirname $(dirname $0))
-
-# Clone robbyrussel/oh-my-zsh
-if [ ! -e $BASEDIR/tag-zsh/oh-my-zsh ]; then
-    git clone http://github.com/robbyrussell/oh-my-zsh $BASEDIR/tag-zsh/oh-my-zsh
-fi
