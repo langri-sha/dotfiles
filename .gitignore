@@ -2,4 +2,5 @@
 *.foo.t.err
 
 tag-gnome/local/share
+tag-tmux/tmux
 tag-zsh/oh-my-zsh
