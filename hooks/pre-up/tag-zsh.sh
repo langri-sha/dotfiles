@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-zsh=$(readlink -f ../../tag-zsh/oh-my-zsh)
+zsh=$(readlink -f ../../tag-zsh)/oh-my-zsh
 
 # Clone robbyrussel/oh-my-zsh
 if [ ! -e $zsh ]; then
