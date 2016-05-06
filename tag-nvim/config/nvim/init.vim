@@ -69,8 +69,6 @@ call dein#add('zchee/deoplete-jedi', {'on_ft': 'python'})
 " Interface
 call dein#add('airblade/vim-gitgutter')
 call dein#add('bling/vim-airline')
-call dein#add('fholgado/minibufexpl.vim')
-call dein#add('gcmt/taboo.vim')
 call dein#add('jaxbot/github-issues.vim')
 call dein#add('jistr/vim-nerdtree-tabs')
 call dein#add('mileszs/ack.vim')
