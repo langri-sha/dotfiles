@@ -12,3 +12,5 @@ autocmd BufRead * normal zz
 
 set noshowmode
 set noswapfile
+
+set number
