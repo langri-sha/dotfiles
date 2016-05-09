@@ -3,6 +3,7 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline_powerline_fonts = 1
+let g:airline_theme = 'oceanicnext'
 tmap <leader>1  <C-\><C-n><Plug>AirlineSelectTab1
 tmap <leader>2  <C-\><C-n><Plug>AirlineSelectTab2
 tmap <leader>3  <C-\><C-n><Plug>AirlineSelectTab3
