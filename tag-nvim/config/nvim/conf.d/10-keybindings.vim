@@ -14,5 +14,11 @@ vmap > >gv
 " Terminal 'normal mode'.
 tmap <esc> <c-\><c-n><esc><cr>
 
-" Exit insert, dd line, enter insert.
-inoremap <c-d> <esc>ddi
+" Don't move cursor when exiting insert mode.
+inoremap <silent> <Esc> <C-O>:stopinsert<CR>
+
+" Atom.
+nmap <c-d> yyp
+imap <c-d> <esc>yypi
+nmap <c-k> dd
+imap <c-k> <esc>ddi
