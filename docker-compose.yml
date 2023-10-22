@@ -1,6 +1,7 @@
-base:
-  build: .
-shell:
-  extends: base
-  volumes:
-    - ./:/root/.langri-sha-dotfiles
+services:
+  base:
+    build: .
+  shell:
+    extends: base
+    volumes:
+      - ./:/root/.langri-sha-dotfiles
