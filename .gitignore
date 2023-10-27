@@ -1,4 +1,8 @@
-.vagrant
+.*
+!.gitattributes
+!.editorconfig
+!.gitignore
+
 *.foo.t.err
 
 tag-gnome/local/share
