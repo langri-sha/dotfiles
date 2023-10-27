@@ -13,6 +13,7 @@ if [ -f "/etc/debian_version" ]; then
         sudo tee /etc/apt/sources.list.d/hashicorp.list
     sudo apt-get update
     sudo apt-get install terraform
+    terraform -install-autocomplete
 else
     echo "[ERROR] Sorry, your operating system isn't supported!"
 fi
