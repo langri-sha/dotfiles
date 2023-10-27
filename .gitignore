@@ -1,6 +1,7 @@
 .*
-!.gitattributes
+!.dockerignore
 !.editorconfig
+!.gitattributes
 !.gitignore
 
 *.foo.t.err
