@@ -21,6 +21,7 @@ if [ -d "/home/codespace" ] && [ -f "/etc/debian_version" ]; then
         sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
     sudo apt-get update
     sudo apt-get install google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin
+    gcloud init
 else
     echo "[ERROR] Sorry, your environment or operating system isn't supported!"
 fi
