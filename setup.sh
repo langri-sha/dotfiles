@@ -20,7 +20,7 @@ if [ -d "/home/codespace" ] && [ -f "/etc/debian_version" ]; then
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | \
         sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
     sudo apt-get update
-    sudo apt-get install google-cloud-cli
+    sudo apt-get install google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin
 else
     echo "[ERROR] Sorry, your environment or operating system isn't supported!"
 fi
