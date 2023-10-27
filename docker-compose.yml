@@ -1,6 +1,11 @@
 services:
   base:
     build: .
+  codespace:
+    build:
+      context: .
+      dockerfile: docker/codespace/Dockerfile
+    entrypoint: bash
   shell:
     extends: base
     volumes:
