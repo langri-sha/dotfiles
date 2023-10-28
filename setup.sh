@@ -24,4 +24,5 @@ if [ -d "/home/codespace" ] && [ -f "/etc/debian_version" ]; then
     gcloud init
 else
     echo "[ERROR] Sorry, your environment or operating system isn't supported!"
+    exit 1
 fi
