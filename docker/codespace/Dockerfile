@@ -8,3 +8,5 @@ RUN <<EOF
 	useradd -m codespace
 	usermod -aG sudo codespace
 EOF
+
+USER codespace
