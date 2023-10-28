@@ -10,3 +10,7 @@ RUN <<EOF
 EOF
 
 USER codespace
+
+RUN <<EOF
+	./setup.sh
+EOF
