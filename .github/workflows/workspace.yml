@@ -1,0 +1,10 @@
+name: Workspace
+
+jobs:
+  codespace:
+    name: Codespace
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
