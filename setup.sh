@@ -1,5 +1,7 @@
 if [ -d "/home/codespace" ] && [ -f "/etc/debian_version" ]; then
     sudo apt-get update
+    sudo apt-get install \
+        cmake
 
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
     $HOME/.cargo/bin/cargo install \
