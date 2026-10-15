@@ -23,3 +23,9 @@ The pre-up hooks clone oh-my-zsh and tpm on the first run.
 
 In a GitHub Codespace, `setup.sh` runs instead: it installs ripgrep, starship,
 tealdeer, Terraform and the Google Cloud CLI, and links nothing.
+
+## Contributing
+
+CI builds the Codespace image (`docker compose build codespace`), which runs
+`setup.sh`. See
+[CONTRIBUTING.md](https://github.com/langri-sha/github/blob/main/CONTRIBUTING.md).
