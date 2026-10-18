@@ -1,0 +1,25 @@
+name: Agent wrappers
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Lint
+        run: shellcheck agent-wrappers/functions.bash agent-wrappers/test.bash
+
+      - name: Test
+        run: bash agent-wrappers/test.bash
