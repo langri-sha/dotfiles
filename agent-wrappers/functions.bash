@@ -53,7 +53,6 @@ codex() {
     args=(
       -c 'model_provider="aperture"'
       -c "model_providers.aperture={name=\"Aperture\", base_url=\"$url/codex\", wire_api=\"responses\", requires_openai_auth=true}"
-      -c 'model="gpt-5.6-sol"'
       "${args[@]}"
     )
   fi
