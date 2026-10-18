@@ -105,7 +105,7 @@ expect "codex --yolo becomes the bypass flag" \
     "codex --dangerously-bypass-approvals-and-sandbox")" \
   codex --yolo
 
-codex_gateway_flags="-c model_provider=\"aperture\" -c model_providers.aperture={name=\"Aperture\", base_url=\"http://gateway.test/codex\", wire_api=\"responses\", requires_openai_auth=true} -c model=\"gpt-5.6-sol\""
+codex_gateway_flags="-c model_provider=\"aperture\" -c model_providers.aperture={name=\"Aperture\", base_url=\"http://gateway.test/codex\", wire_api=\"responses\", requires_openai_auth=true}"
 
 expect "codex --gateway selects the aperture provider and is stripped" \
   "$(lines "op run --no-masking --env-file=$envs/agents.env" \

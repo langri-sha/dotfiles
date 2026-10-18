@@ -25,8 +25,8 @@ login. Without the flag nothing changes.
 - `claude --gateway` adds `agents-gateway.env`, which sets
   `ANTHROPIC_BASE_URL` and nothing else. It cannot be combined with `--qwen`.
 - `codex --gateway` selects the `aperture` provider with `-c` overrides, built
-  from the same URL, and pins `-c model="gpt-5.6-sol"`. A later `-c model=...`
-  wins.
+  from the same URL, and leaves the model to the Codex config. A later
+  `-c model=...` wins.
 
 The flag is not remembered: pass it again when resuming a session, for example
 `claude --gateway --resume <id>`, or the session goes direct.
