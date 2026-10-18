@@ -9,6 +9,7 @@ export HOME="$sandbox/home"
 export PATH="$sandbox/bin:$PATH"
 envs="$HOME/workspace/environments"
 mkdir -p "$sandbox/bin" "$envs"
+printf 'ANTHROPIC_BASE_URL=http://gateway.test\n' > "$envs/agents-gateway.env"
 
 cat > "$sandbox/bin/op" <<'STUB'
 #!/usr/bin/env bash
@@ -103,6 +104,23 @@ expect "codex --yolo becomes the bypass flag" \
   "$(lines "op run --no-masking --env-file=$envs/agents.env" \
     "codex --dangerously-bypass-approvals-and-sandbox")" \
   codex --yolo
+
+codex_gateway_flags="-c model_provider=\"aperture\" -c model_providers.aperture={name=\"Aperture\", base_url=\"http://gateway.test/codex\", wire_api=\"responses\", requires_openai_auth=true} -c model=\"gpt-5.6-sol\""
+
+expect "codex --gateway selects the aperture provider and is stripped" \
+  "$(lines "op run --no-masking --env-file=$envs/agents.env" \
+    "codex $codex_gateway_flags exec hi")" \
+  codex --gateway exec hi
+
+expect "codex --yolo --gateway keeps both effects" \
+  "$(lines "op run --no-masking --env-file=$envs/agents.env" \
+    "codex $codex_gateway_flags --dangerously-bypass-approvals-and-sandbox")" \
+  codex --yolo --gateway
+
+expect "codex --gateway leaves later model overrides in place" \
+  "$(lines "op run --no-masking --env-file=$envs/agents.env" \
+    "codex $codex_gateway_flags -c model=\"gpt-5.6-terra\"")" \
+  codex --gateway -c 'model="gpt-5.6-terra"'
 
 for name in opencode pi feynman hermes; do
   expect "$name loads the agents env file" \

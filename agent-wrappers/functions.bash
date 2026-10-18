@@ -33,14 +33,30 @@ opencode() {
 }
 
 codex() {
-  local args=()
+  local args=() gateway=0
   for arg in "$@"; do
     if [[ "$arg" == "--yolo" ]]; then
       args+=(--dangerously-bypass-approvals-and-sandbox)
+    elif [[ "$arg" == "--gateway" ]]; then
+      gateway=1
     else
       args+=("$arg")
     fi
   done
+  if ((gateway)); then
+    local url
+    url=$(sed -n 's/^ANTHROPIC_BASE_URL=//p' "$HOME/workspace/environments/agents-gateway.env") || return 1
+    if [[ -z "$url" ]]; then
+      echo "codex: no ANTHROPIC_BASE_URL in agents-gateway.env" >&2
+      return 1
+    fi
+    args=(
+      -c 'model_provider="aperture"'
+      -c "model_providers.aperture={name=\"Aperture\", base_url=\"$url/codex\", wire_api=\"responses\", requires_openai_auth=true}"
+      -c 'model="gpt-5.6-sol"'
+      "${args[@]}"
+    )
+  fi
   op run --no-masking --env-file="$HOME/workspace/environments/agents.env" -- codex "${args[@]}"
 }
 
