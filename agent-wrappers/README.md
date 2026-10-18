@@ -19,20 +19,20 @@ reading the env files in `~/workspace/environments`.
 
 ## Gateway
 
-`--gateway` routes an agent through the Aperture gateway on its existing
-login. Without the flag nothing changes.
+`claude` runs through the Aperture gateway on its existing login: it loads
+`agents-gateway.env`, which sets `ANTHROPIC_BASE_URL` and nothing else.
 
-- `claude --gateway` adds `agents-gateway.env`, which sets
-  `ANTHROPIC_BASE_URL` and nothing else. It cannot be combined with `--qwen`.
-- `codex --gateway` selects the `aperture` provider with `-c` overrides, built
-  from the same URL, and leaves the model to the Codex config. A later
-  `-c model=...` wins.
+- `claude --direct` starts without it.
+- `claude --qwen` starts without it.
+- `AGENTS_GATEWAY=0` turns the gateway off for every launch in that shell.
+- `claude --gateway` is accepted and does nothing extra.
 
 The gateway is probed with a one second `curl` first. If it is unreachable, the
 agent starts direct and one line says so on stderr.
 
-The flag is not remembered: pass it again when resuming a session, for example
-`claude --gateway --resume <id>`, or the session goes direct.
+`codex --gateway` selects the `aperture` provider with `-c` overrides, built
+from the same URL, and leaves the model to the Codex config. A later
+`-c model=...` wins.
 
 ## Tests
 

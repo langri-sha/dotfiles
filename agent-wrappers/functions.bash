@@ -20,24 +20,22 @@ _agents_gateway_probe() {
 
 claude() {
   local args=() env_files=("$HOME/workspace/environments/agents.env" "$HOME/workspace/environments/otel.env")
-  local qwen=0 gateway=0
+  local qwen=0 direct=0
   for arg in "$@"; do
     if [[ "$arg" == "--yolo" ]]; then
       args+=(--permission-mode bypassPermissions)
     elif [[ "$arg" == "--qwen" ]]; then
       qwen=1
       env_files+=("$HOME/workspace/environments/agents-qwen.env")
+    elif [[ "$arg" == "--direct" ]]; then
+      direct=1
     elif [[ "$arg" == "--gateway" ]]; then
-      gateway=1
+      :
     else
       args+=("$arg")
     fi
   done
-  if ((qwen && gateway)); then
-    echo "claude: --qwen and --gateway both set ANTHROPIC_BASE_URL; pick one" >&2
-    return 1
-  fi
-  if ((gateway)) && _agents_gateway_probe claude >/dev/null; then
+  if ((!qwen && !direct)) && [[ "${AGENTS_GATEWAY-1}" != 0 ]] && _agents_gateway_probe claude >/dev/null; then
     env_files+=("$HOME/workspace/environments/agents-gateway.env")
   fi
   local op_args=()

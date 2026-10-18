@@ -80,61 +80,95 @@ lines() {
 }
 
 claude_path="path $HOME/.claude/bin"
+claude_op="op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env"
+claude_gateway_op="$claude_op --env-file=$envs/agents-gateway.env"
+claude_qwen_op="$claude_op --env-file=$envs/agents-qwen.env"
+unreachable="claude: gateway unreachable at http://gateway.test; starting direct"
 
-expect "claude without flags loads agents and otel env files" \
-  "$(lines "op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env" \
-    "claude --resume abc" "$claude_path")" \
+expect "claude defaults to the gateway env file" \
+  "$(lines "$claude_gateway_op" "claude --resume abc" "$claude_path")" \
   claude --resume abc
 
-expect "claude --yolo becomes a bypassPermissions mode" \
-  "$(lines "op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env" \
-    "claude --permission-mode bypassPermissions" "$claude_path")" \
+expect "claude --yolo becomes a bypassPermissions mode and keeps the gateway" \
+  "$(lines "$claude_gateway_op" "claude --permission-mode bypassPermissions" "$claude_path")" \
   claude --yolo
 
-expect "claude --qwen adds the qwen env file and is stripped" \
-  "$(lines "op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env --env-file=$envs/agents-qwen.env" \
-    "claude --resume abc" "$claude_path")" \
+expect "claude --direct skips the gateway env file and is stripped" \
+  "$(lines "$claude_op" "claude --resume abc" "$claude_path")" \
+  claude --direct --resume abc
+
+expect "claude --yolo --direct keeps the bypass flag without the gateway" \
+  "$(lines "$claude_op" "claude --permission-mode bypassPermissions" "$claude_path")" \
+  claude --yolo --direct
+
+expect "claude --qwen adds the qwen env file without the gateway" \
+  "$(lines "$claude_qwen_op" "claude --resume abc" "$claude_path")" \
   claude --qwen --resume abc
 
-expect "claude --gateway adds the gateway env file and is stripped" \
-  "$(lines "op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env --env-file=$envs/agents-gateway.env" \
-    "claude --resume abc" "$claude_path")" \
+expect "claude --yolo --qwen keeps the bypass flag without the gateway" \
+  "$(lines "$claude_qwen_op" "claude --permission-mode bypassPermissions" "$claude_path")" \
+  claude --yolo --qwen
+
+expect "claude --qwen --direct behaves as --qwen" \
+  "$(lines "$claude_qwen_op" "claude" "$claude_path")" \
+  claude --qwen --direct
+
+expect "claude --gateway is accepted, stripped and changes nothing" \
+  "$(lines "$claude_gateway_op" "claude --resume abc" "$claude_path")" \
   claude --gateway --resume abc
 
-expect "claude --yolo --gateway keeps both effects" \
-  "$(lines "op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env --env-file=$envs/agents-gateway.env" \
-    "claude --permission-mode bypassPermissions" "$claude_path")" \
-  claude --yolo --gateway
+expect "claude --gateway --direct goes direct" \
+  "$(lines "$claude_op" "claude" "$claude_path")" \
+  claude --gateway --direct
 
-expect "claude rejects --qwen with --gateway" \
-  "claude: --qwen and --gateway both set ANTHROPIC_BASE_URL; pick one" \
+expect "claude --qwen --gateway goes to qwen without the gateway" \
+  "$(lines "$claude_qwen_op" "claude" "$claude_path")" \
   claude --qwen --gateway
 
-expect "claude rejects --gateway with --qwen" \
-  "claude: --qwen and --gateway both set ANTHROPIC_BASE_URL; pick one" \
-  claude --gateway --qwen
+AGENTS_GATEWAY=0 expect "claude with AGENTS_GATEWAY=0 goes direct" \
+  "$(lines "$claude_op" "claude --resume abc" "$claude_path")" \
+  claude --resume abc
 
-PROBE_FAIL=1 expect "claude --gateway falls back to direct when the gateway probe fails" \
-  "$(lines "claude: gateway unreachable at http://gateway.test; starting direct" \
-    "op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env" \
-    "claude --resume abc" "$claude_path")" \
-  claude --gateway --resume abc
+AGENTS_GATEWAY=0 expect "claude --gateway with AGENTS_GATEWAY=0 goes direct" \
+  "$(lines "$claude_op" "claude" "$claude_path")" \
+  claude --gateway
 
-rm -f "$HOME/probes"
-run claude --gateway >/dev/null
-expect_file "claude --gateway probes the gateway root with a one second limit" \
-  "curl -fsS -m 1 -o /dev/null http://gateway.test/" "$HOME/probes"
+AGENTS_GATEWAY=1 expect "claude with AGENTS_GATEWAY=1 uses the gateway" \
+  "$(lines "$claude_gateway_op" "claude" "$claude_path")" \
+  claude
+
+PROBE_FAIL=1 expect "claude falls back to direct when the gateway probe fails" \
+  "$(lines "$unreachable" "$claude_op" "claude --resume abc" "$claude_path")" \
+  claude --resume abc
+
+PROBE_FAIL=1 expect "claude --yolo falls back to direct when the gateway probe fails" \
+  "$(lines "$unreachable" "$claude_op" "claude --permission-mode bypassPermissions" "$claude_path")" \
+  claude --yolo
+
+PROBE_FAIL=1 expect "claude --qwen does not probe the gateway" \
+  "$(lines "$claude_qwen_op" "claude" "$claude_path")" \
+  claude --qwen
+
+PROBE_FAIL=1 expect "claude --direct does not probe the gateway" \
+  "$(lines "$claude_op" "claude" "$claude_path")" \
+  claude --direct
 
 rm -f "$HOME/probes"
 run claude >/dev/null
-expect_file "claude without flags does not probe the gateway" "" "$HOME/probes"
+expect_file "claude probes the gateway root with a one second limit" \
+  "curl -fsS -m 1 -o /dev/null http://gateway.test/" "$HOME/probes"
+
+rm -f "$HOME/probes"
+run claude --direct >/dev/null
+AGENTS_GATEWAY=0 run claude >/dev/null
+run claude --qwen >/dev/null
+expect_file "claude does not probe when the gateway is off" "" "$HOME/probes"
 
 mv "$envs/agents-gateway.env" "$envs/agents-gateway.env.away"
-expect "claude --gateway falls back to direct without a gateway env file" \
+expect "claude falls back to direct without a gateway env file" \
   "$(lines "claude: no ANTHROPIC_BASE_URL in agents-gateway.env; starting direct" \
-    "op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env" \
-    "claude" "$claude_path")" \
-  claude --gateway
+    "$claude_op" "claude" "$claude_path")" \
+  claude
 mv "$envs/agents-gateway.env.away" "$envs/agents-gateway.env"
 
 expect "codex without flags loads the agents env file" \
