@@ -51,18 +51,19 @@ opencode() {
 }
 
 codex() {
-  local args=() gateway=0
+  local args=() direct=0 url
   for arg in "$@"; do
     if [[ "$arg" == "--yolo" ]]; then
       args+=(--dangerously-bypass-approvals-and-sandbox)
+    elif [[ "$arg" == "--direct" ]]; then
+      direct=1
     elif [[ "$arg" == "--gateway" ]]; then
-      gateway=1
+      :
     else
       args+=("$arg")
     fi
   done
-  local url
-  if ((gateway)) && url=$(_agents_gateway_probe codex); then
+  if ((!direct)) && [[ "${AGENTS_GATEWAY-1}" != 0 ]] && url=$(_agents_gateway_probe codex); then
     args=(
       -c 'model_provider="aperture"'
       -c "model_providers.aperture={name=\"Aperture\", base_url=\"$url/codex\", wire_api=\"responses\", requires_openai_auth=true}"

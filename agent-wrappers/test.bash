@@ -171,45 +171,71 @@ expect "claude falls back to direct without a gateway env file" \
   claude
 mv "$envs/agents-gateway.env.away" "$envs/agents-gateway.env"
 
-expect "codex without flags loads the agents env file" \
-  "$(lines "op run --no-masking --env-file=$envs/agents.env" "codex exec hi")" \
+codex_op="op run --no-masking --env-file=$envs/agents.env"
+codex_gateway_flags="-c model_provider=\"aperture\" -c model_providers.aperture={name=\"Aperture\", base_url=\"http://gateway.test/codex\", wire_api=\"responses\", requires_openai_auth=true}"
+codex_unreachable="codex: gateway unreachable at http://gateway.test; starting direct"
+
+expect "codex defaults to the aperture provider" \
+  "$(lines "$codex_op" "codex $codex_gateway_flags exec hi")" \
   codex exec hi
 
-expect "codex --yolo becomes the bypass flag" \
-  "$(lines "op run --no-masking --env-file=$envs/agents.env" \
-    "codex --dangerously-bypass-approvals-and-sandbox")" \
+expect "codex --yolo becomes the bypass flag and keeps the gateway" \
+  "$(lines "$codex_op" "codex $codex_gateway_flags --dangerously-bypass-approvals-and-sandbox")" \
   codex --yolo
 
-codex_gateway_flags="-c model_provider=\"aperture\" -c model_providers.aperture={name=\"Aperture\", base_url=\"http://gateway.test/codex\", wire_api=\"responses\", requires_openai_auth=true}"
+expect "codex keeps a resume subcommand after the provider flags" \
+  "$(lines "$codex_op" "codex $codex_gateway_flags resume abc")" \
+  codex resume abc
 
-expect "codex --gateway selects the aperture provider and is stripped" \
-  "$(lines "op run --no-masking --env-file=$envs/agents.env" \
-    "codex $codex_gateway_flags exec hi")" \
+expect "codex --direct skips the provider flags and is stripped" \
+  "$(lines "$codex_op" "codex exec hi")" \
+  codex --direct exec hi
+
+expect "codex --yolo --direct keeps the bypass flag without the gateway" \
+  "$(lines "$codex_op" "codex --dangerously-bypass-approvals-and-sandbox")" \
+  codex --yolo --direct
+
+expect "codex --gateway is accepted, stripped and changes nothing" \
+  "$(lines "$codex_op" "codex $codex_gateway_flags exec hi")" \
   codex --gateway exec hi
 
-expect "codex --yolo --gateway keeps both effects" \
-  "$(lines "op run --no-masking --env-file=$envs/agents.env" \
-    "codex $codex_gateway_flags --dangerously-bypass-approvals-and-sandbox")" \
-  codex --yolo --gateway
+expect "codex --gateway --direct goes direct" \
+  "$(lines "$codex_op" "codex")" \
+  codex --gateway --direct
 
-expect "codex --gateway leaves later model overrides in place" \
-  "$(lines "op run --no-masking --env-file=$envs/agents.env" \
-    "codex $codex_gateway_flags -c model=\"gpt-5.6-terra\"")" \
-  codex --gateway -c 'model="gpt-5.6-terra"'
+expect "codex leaves the model to later overrides" \
+  "$(lines "$codex_op" "codex $codex_gateway_flags -c model=\"gpt-5.6-terra\"")" \
+  codex -c 'model="gpt-5.6-terra"'
 
-PROBE_FAIL=1 expect "codex --gateway falls back to direct when the gateway probe fails" \
-  "$(lines "codex: gateway unreachable at http://gateway.test; starting direct" \
-    "op run --no-masking --env-file=$envs/agents.env" "codex exec hi")" \
-  codex --gateway exec hi
+AGENTS_GATEWAY=0 expect "codex with AGENTS_GATEWAY=0 goes direct" \
+  "$(lines "$codex_op" "codex exec hi")" \
+  codex exec hi
 
-rm -f "$HOME/probes"
-run codex --gateway >/dev/null
-expect_file "codex --gateway probes the gateway root with a one second limit" \
-  "curl -fsS -m 1 -o /dev/null http://gateway.test/" "$HOME/probes"
+AGENTS_GATEWAY=0 expect "codex --gateway with AGENTS_GATEWAY=0 goes direct" \
+  "$(lines "$codex_op" "codex")" \
+  codex --gateway
+
+PROBE_FAIL=1 expect "codex falls back to direct when the gateway probe fails" \
+  "$(lines "$codex_unreachable" "$codex_op" "codex exec hi")" \
+  codex exec hi
+
+PROBE_FAIL=1 expect "codex --yolo falls back to direct when the gateway probe fails" \
+  "$(lines "$codex_unreachable" "$codex_op" "codex --dangerously-bypass-approvals-and-sandbox")" \
+  codex --yolo
+
+PROBE_FAIL=1 expect "codex --direct does not probe the gateway" \
+  "$(lines "$codex_op" "codex")" \
+  codex --direct
 
 rm -f "$HOME/probes"
 run codex >/dev/null
-expect_file "codex without flags does not probe the gateway" "" "$HOME/probes"
+expect_file "codex probes the gateway root with a one second limit" \
+  "curl -fsS -m 1 -o /dev/null http://gateway.test/" "$HOME/probes"
+
+rm -f "$HOME/probes"
+run codex --direct >/dev/null
+AGENTS_GATEWAY=0 run codex >/dev/null
+expect_file "codex does not probe when the gateway is off" "" "$HOME/probes"
 
 for name in opencode pi feynman hermes; do
   expect "$name loads the agents env file" \

@@ -19,20 +19,23 @@ reading the env files in `~/workspace/environments`.
 
 ## Gateway
 
-`claude` runs through the Aperture gateway on its existing login: it loads
-`agents-gateway.env`, which sets `ANTHROPIC_BASE_URL` and nothing else.
+`claude` and `codex` run through the Aperture gateway on the existing login.
 
-- `claude --direct` starts without it.
-- `claude --qwen` starts without it.
+- `claude` loads `agents-gateway.env`, which sets `ANTHROPIC_BASE_URL` and
+  nothing else.
+- `codex` selects the `aperture` provider with `-c` overrides built from the
+  same URL and leaves the model to the Codex config. A later `-c model=...`
+  wins.
+
+Opt out:
+
+- `--direct` starts that agent without the gateway.
+- `claude --qwen` starts without the gateway.
 - `AGENTS_GATEWAY=0` turns the gateway off for every launch in that shell.
-- `claude --gateway` is accepted and does nothing extra.
+- `--gateway` is accepted and does nothing extra.
 
 The gateway is probed with a one second `curl` first. If it is unreachable, the
 agent starts direct and one line says so on stderr.
-
-`codex --gateway` selects the `aperture` provider with `-c` overrides, built
-from the same URL, and leaves the model to the Codex config. A later
-`-c model=...` wins.
 
 ## Tests
 
