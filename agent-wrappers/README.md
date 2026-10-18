@@ -28,6 +28,9 @@ login. Without the flag nothing changes.
   from the same URL, and leaves the model to the Codex config. A later
   `-c model=...` wins.
 
+The gateway is probed with a one second `curl` first. If it is unreachable, the
+agent starts direct and one line says so on stderr.
+
 The flag is not remembered: pass it again when resuming a session, for example
 `claude --gateway --resume <id>`, or the session goes direct.
 

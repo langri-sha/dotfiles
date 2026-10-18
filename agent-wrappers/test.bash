@@ -26,13 +26,19 @@ STUB
 cat > "$sandbox/bin/agent" <<'STUB'
 #!/usr/bin/env bash
 name=${0##*/}
-printf '%s %s\n' "$name" "$*"
+printf '%s\n' "$name${*:+ $*}"
 if [[ $name == claude ]]; then
   printf 'path %s\n' "${PATH%%:*}"
 fi
 STUB
 
-chmod +x "$sandbox/bin/op" "$sandbox/bin/agent"
+cat > "$sandbox/bin/curl" <<'STUB'
+#!/usr/bin/env bash
+printf 'curl %s\n' "$*" >> "$HOME/probes"
+((${PROBE_FAIL:-0} == 0))
+STUB
+
+chmod +x "$sandbox/bin/op" "$sandbox/bin/agent" "$sandbox/bin/curl"
 for name in claude codex opencode letta pi feynman hermes; do
   ln -s agent "$sandbox/bin/$name"
 done
@@ -48,6 +54,18 @@ expect() {
   shift 2
   local actual
   actual=$(run "$@")
+  if [[ $actual == "$expected" ]]; then
+    printf 'ok   %s\n' "$name"
+  else
+    printf 'FAIL %s\n--- expected\n%s\n--- actual\n%s\n' "$name" "$expected" "$actual"
+    failures=$((failures + 1))
+  fi
+}
+
+expect_file() {
+  local name=$1 expected=$2 file=$3
+  local actual=
+  [[ -f $file ]] && actual=$(<"$file")
   if [[ $actual == "$expected" ]]; then
     printf 'ok   %s\n' "$name"
   else
@@ -96,6 +114,29 @@ expect "claude rejects --gateway with --qwen" \
   "claude: --qwen and --gateway both set ANTHROPIC_BASE_URL; pick one" \
   claude --gateway --qwen
 
+PROBE_FAIL=1 expect "claude --gateway falls back to direct when the gateway probe fails" \
+  "$(lines "claude: gateway unreachable at http://gateway.test; starting direct" \
+    "op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env" \
+    "claude --resume abc" "$claude_path")" \
+  claude --gateway --resume abc
+
+rm -f "$HOME/probes"
+run claude --gateway >/dev/null
+expect_file "claude --gateway probes the gateway root with a one second limit" \
+  "curl -fsS -m 1 -o /dev/null http://gateway.test/" "$HOME/probes"
+
+rm -f "$HOME/probes"
+run claude >/dev/null
+expect_file "claude without flags does not probe the gateway" "" "$HOME/probes"
+
+mv "$envs/agents-gateway.env" "$envs/agents-gateway.env.away"
+expect "claude --gateway falls back to direct without a gateway env file" \
+  "$(lines "claude: no ANTHROPIC_BASE_URL in agents-gateway.env; starting direct" \
+    "op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env" \
+    "claude" "$claude_path")" \
+  claude --gateway
+mv "$envs/agents-gateway.env.away" "$envs/agents-gateway.env"
+
 expect "codex without flags loads the agents env file" \
   "$(lines "op run --no-masking --env-file=$envs/agents.env" "codex exec hi")" \
   codex exec hi
@@ -121,6 +162,20 @@ expect "codex --gateway leaves later model overrides in place" \
   "$(lines "op run --no-masking --env-file=$envs/agents.env" \
     "codex $codex_gateway_flags -c model=\"gpt-5.6-terra\"")" \
   codex --gateway -c 'model="gpt-5.6-terra"'
+
+PROBE_FAIL=1 expect "codex --gateway falls back to direct when the gateway probe fails" \
+  "$(lines "codex: gateway unreachable at http://gateway.test; starting direct" \
+    "op run --no-masking --env-file=$envs/agents.env" "codex exec hi")" \
+  codex --gateway exec hi
+
+rm -f "$HOME/probes"
+run codex --gateway >/dev/null
+expect_file "codex --gateway probes the gateway root with a one second limit" \
+  "curl -fsS -m 1 -o /dev/null http://gateway.test/" "$HOME/probes"
+
+rm -f "$HOME/probes"
+run codex >/dev/null
+expect_file "codex without flags does not probe the gateway" "" "$HOME/probes"
 
 for name in opencode pi feynman hermes; do
   expect "$name loads the agents env file" \
