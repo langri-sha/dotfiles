@@ -17,6 +17,27 @@ reading the env files in `~/workspace/environments`.
 `claude --yolo` and `codex --yolo` map to each agent's bypass flag.
 `claude --qwen` adds `agents-qwen.env`.
 
+## Gateway
+
+`--gateway` routes an agent through the Aperture gateway on its existing
+login. Without the flag nothing changes.
+
+- `claude --gateway` adds `agents-gateway.env`, which sets
+  `ANTHROPIC_BASE_URL` and nothing else. It cannot be combined with `--qwen`.
+- `codex --gateway` selects the `aperture` provider with `-c` overrides, built
+  from the same URL, and pins `-c model="gpt-5.6-sol"`. A later `-c model=...`
+  wins.
+
+The flag is not remembered: pass it again when resuming a session, for example
+`claude --gateway --resume <id>`, or the session goes direct.
+
+## Tests
+
+```sh
+shellcheck agent-wrappers/*.bash
+bash agent-wrappers/test.bash
+```
+
 ## Sourcing
 
 Add this to `~/.bashrc`:
