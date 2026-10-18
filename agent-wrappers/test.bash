@@ -77,6 +77,24 @@ expect "claude --qwen adds the qwen env file and is stripped" \
     "claude --resume abc" "$claude_path")" \
   claude --qwen --resume abc
 
+expect "claude --gateway adds the gateway env file and is stripped" \
+  "$(lines "op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env --env-file=$envs/agents-gateway.env" \
+    "claude --resume abc" "$claude_path")" \
+  claude --gateway --resume abc
+
+expect "claude --yolo --gateway keeps both effects" \
+  "$(lines "op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env --env-file=$envs/agents-gateway.env" \
+    "claude --permission-mode bypassPermissions" "$claude_path")" \
+  claude --yolo --gateway
+
+expect "claude rejects --qwen with --gateway" \
+  "claude: --qwen and --gateway both set ANTHROPIC_BASE_URL; pick one" \
+  claude --qwen --gateway
+
+expect "claude rejects --gateway with --qwen" \
+  "claude: --qwen and --gateway both set ANTHROPIC_BASE_URL; pick one" \
+  claude --gateway --qwen
+
 expect "codex without flags loads the agents env file" \
   "$(lines "op run --no-masking --env-file=$envs/agents.env" "codex exec hi")" \
   codex exec hi

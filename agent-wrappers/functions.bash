@@ -2,15 +2,24 @@
 # Agent wrappers — inject secrets via 1Password CLI
 claude() {
   local args=() env_files=("$HOME/workspace/environments/agents.env" "$HOME/workspace/environments/otel.env")
+  local qwen=0 gateway=0
   for arg in "$@"; do
     if [[ "$arg" == "--yolo" ]]; then
       args+=(--permission-mode bypassPermissions)
     elif [[ "$arg" == "--qwen" ]]; then
+      qwen=1
       env_files+=("$HOME/workspace/environments/agents-qwen.env")
+    elif [[ "$arg" == "--gateway" ]]; then
+      gateway=1
+      env_files+=("$HOME/workspace/environments/agents-gateway.env")
     else
       args+=("$arg")
     fi
   done
+  if ((qwen && gateway)); then
+    echo "claude: --qwen and --gateway both set ANTHROPIC_BASE_URL; pick one" >&2
+    return 1
+  fi
   local op_args=()
   for f in "${env_files[@]}"; do
     op_args+=(--env-file="$f")
