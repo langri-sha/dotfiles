@@ -19,7 +19,7 @@ _agents_gateway_probe() {
 }
 
 claude() {
-  local args=() env_files=("$HOME/workspace/environments/agents.env" "$HOME/workspace/environments/otel.env")
+  local args=() env_files=("$HOME/workspace/environments/agents.env")
   local qwen=0 direct=0
   for arg in "$@"; do
     if [[ "$arg" == "--yolo" ]]; then

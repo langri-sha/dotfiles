@@ -6,7 +6,7 @@ reading the env files in `~/workspace/environments`.
 
 | Function   | Env files                      |
 | ---------- | ------------------------------ |
-| `claude`   | `agents.env`, `otel.env`       |
+| `claude`   | `agents.env`                   |
 | `codex`    | `agents.env`                   |
 | `opencode` | `agents.env`                   |
 | `pi`       | `agents.env`                   |
