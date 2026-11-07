@@ -80,7 +80,7 @@ lines() {
 }
 
 claude_path="path $HOME/.claude/bin"
-claude_op="op run --no-masking --env-file=$envs/agents.env --env-file=$envs/otel.env"
+claude_op="op run --no-masking --env-file=$envs/agents.env"
 claude_gateway_op="$claude_op --env-file=$envs/agents-gateway.env"
 claude_qwen_op="$claude_op --env-file=$envs/agents-qwen.env"
 unreachable="claude: gateway unreachable at http://gateway.test; starting direct"
